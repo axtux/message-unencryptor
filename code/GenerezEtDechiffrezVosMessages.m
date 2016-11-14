@@ -1,40 +1,43 @@
-% Projet d'optimisation non linéaire
+% Projet d'optimisation non linï¿½aire
 %
-% Envoi d'un message crypté à travers un canal avec du bruit qaussien...
+% Envoi d'un message cryptï¿½ ï¿½ travers un canal avec du bruit qaussien...
 % 
-% Encodez vous-même et déchiffrez un message: 
+% Encodez vous-mï¿½me et dï¿½chiffrez un message: 
 
-clear all; clc; 
- 
-% Message à envoyer
-my_mess = 'Voici un petit test'; 
+clear all; clc;
+
+% Message ï¿½ envoyer
+my_mess = 'Coucou petite perruche !';
 fprintf('The encoded message is: %s \n', my_mess)
 
 % Message sous forme binaire
-[x,d]  = encoding_bin(my_mess); 
+[x,d]  = encoding_bin(my_mess);
 
 % Longeur du message
 n = length(x);
 
-% Longeur du message qui va être envoyé
+% Longeur du message qui va ï¿½tre envoyï¿½
 m = 4*n; 
 
-% Matrice d'encodage: on prend une matrice aléatoirement générée
-A = randn(m,n); 
+%for i = 0:0.1:0.9
+for i = 0.4:0.01:0.5
+  % Matrice d'encodage: on prend une matrice alï¿½atoirement gï¿½nï¿½rï¿½e
+  A = randn(m,n);
 
-% Message que l'on désire envoyer
-y = A*x; 
+  % Message que l'on dï¿½sire envoyer
+  y = A*x; 
 
-% Bruit ajouté par le canal de transmition
-% = normale N(0,sigma) pour un % des entrées de y
-percenterror = 0.1; 
-yprime = noisychannel(y,percenterror); 
+  % Bruit ajoutï¿½ par le canal de transmition
+  % = normale N(0,sigma) pour un % des entrï¿½es de y
+  yprime = noisychannel(y, i); 
 
-% Retrouvez x approximativement depuis yprime en résolvant: 
-% 
-%   min_{0 <= xprime <= 1} ||A*xprime - yprime||_2^2 
-% 
-xprime = votrealgorithme(A,yprime); 
+  % Retrouvez x approximativement depuis yprime en rï¿½solvant: 
+  % 
+  %   min_{0 <= xprime <= 1} ||A*xprime - yprime||_2^2 
+  % 
+  xprime = votrealgorithme(A,yprime); 
 
-fprintf('The error is %d \n', norm(x-xprime)); 
-fprintf('The recovered message is: %s \n', decoding_bin(xprime,d));   
+  %fprintf('The error is %d \n', norm(x-xprime)); 
+  fprintf('Noise %i, message is: %s \n', i, decoding_bin(xprime,d));
+  
+end
