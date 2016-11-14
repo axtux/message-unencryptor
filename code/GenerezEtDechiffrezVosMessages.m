@@ -20,7 +20,8 @@ n = length(x);
 m = 4*n; 
 
 %for i = 0:0.1:0.9
-for i = 0.4:0.01:0.5
+%for i = 0:0.1:0.9
+i = 0.3
   % Matrice d'encodage: on prend une matrice al�atoirement g�n�r�e
   A = randn(m,n);
 
@@ -35,9 +36,13 @@ for i = 0.4:0.01:0.5
   % 
   %   min_{0 <= xprime <= 1} ||A*xprime - yprime||_2^2 
   % 
-  xprime = votrealgorithme(A,yprime); 
+  xprime = votrealgorithme(A,yprime);
 
   %fprintf('The error is %d \n', norm(x-xprime)); 
   fprintf('Noise %i, message is: %s \n', i, decoding_bin(xprime,d));
   
-end
+  
+  xprime = votrealgorithme(A,yprime, true);
+  fprintf('Noise %i, message is: %s \n', i, decoding_bin(xprime,d));
+  
+%end
