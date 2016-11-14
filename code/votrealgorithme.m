@@ -4,23 +4,35 @@
 
 function xprime = votrealgorithme(A1, yprime) 
 
+
 [m, p] = size(A1);
 
 
-% Constraintes :
-A2 = [-1*eye(p) zeros(p, m) % Vi, -xi <= 0
-eye(p) zeros(p, m)          % Vi, x <= 1
-A1 -1*eye(m)                 % Vi, -ti + Ax <= yprime
--1*A1 -1*eye(m)              % Vi, -ti - Ax <= -yprime
+% Objectif : xi->p tpi->m tmi->m qi->m ri->m si->p
+C = [zeros(1, p) ones(1, m) -1*ones(1, m) zeros(1, m) zeros(1, m) zeros(1, p)];
+% Contraintes :
+A2 = [
+-1*A1 eye(m) -1*eye(m) -1*eye(m) zeros(m) zeros(m, p)               % -Ax +tpi -tmi -qi = -y'
+A1 eye(m) -1*eye(m) zeros(m) -1*eye(m) zeros(m, p)                  % Ax +tpi -tmi -ri = y'
+-1*eye(p) zeros(p, m) zeros(p, m) zeros(p, m) zeros(p, m) -1*eye(p) % -xi -si = -1
 ];
-b = [zeros(1, p) ones(1, p) transpose(yprime) -1*transpose(yprime)];
 
-C = [zeros(1, p) ones(1, m)];
-lb = zeros(1, p+m);
-ub = Inf(1, p+m);
-ctype = repmat("U", 1, 2*(p+m));
+B = [
+-1*yprime
+yprime
+-1*ones(p, 1)
+];
 
-% glpk (c, A, b, lb, ub, ctype, vartype, sense, param)
-xprime = glpk(C, A2, b, lb, ub, ctype);
+% default values not working
+lb = zeros(1, 2*p+4*m);
+ub = Inf(1, 2*p+4*m);
+ctype = repmat("S", 1, 2*m+p); % equality constraint
+vartype = repmat("C", 1, 2*p+4*m); % continuous variable
+
+% Résolution :
+variables = glpk(C, A2, B, lb, ub, ctype, vartype);
+xprime = variables(1:m, 1);
+xprime = round(abs(xprime));
+
 
 %xprime = zeros(size(A,2),1); % solution triviale
